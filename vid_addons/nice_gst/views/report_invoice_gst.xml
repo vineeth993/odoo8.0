@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		
+	<template id="external_layout">
+		<t t-if="not o and doc">
+	        <t t-set="o" t-value="doc"/>
+	    </t>
+	    <t t-if="o and 'company_id' in o">
+	        <t t-set="company" t-value="o.company_id"></t>
+	    </t>
+	    <t t-if="not o or not 'company_id' in o">
+	        <t t-set="company" t-value="res_company"></t>
+	    </t>
+    	<t t-call="nice_gst.external_layout_header" />
+    	<br/><br/>
+    	<t t-raw="0" />
+	</template>
+	
+		
+	<template id="external_layout_header">
+	    <div class="header">
+	    	<table width="100%">
+	        	<tr>
+	        		<td width="2%"></td>
+	        		<td width="68%" style="text-align:left;text-size: 1px;">
+	        			<span t-if="not company.letter_head_ok">
+	                		<img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo" style="height: 50px;width: 150px;"/><br/>
+		        			<b><span t-field="company.name"/><br/></b>
+		        			<span t-field="company.street"/><br/>
+		        			<span t-field="company.street2"/>,<span t-field="company.city"/>-<span t-field="company.zip"/><br/>
+		        			Tel:<span t-field="company.phone"/><br/>
+		        			Email:<span t-field="company.email"/><br/>
+	        			</span>
+	        		</td>
+	        		<td width="30%" style="text-align:right;text-size: 1px;">
+	        			Original for Recipient<br/>
+	        			Duplicate for Transporter<br/>
+	        			Triplicate for Supplier<br/>
+	        		</td>
+	        	</tr>
+	        	
+	        </table>
+	    </div>
+	</template>
+
+	<template id="report_invoice_gst_document">
+	    <t t-call="nice_gst.external_layout">
+	        <div class="page">
+	        	<t t-set="company" t-value="res_company"></t>
+	        	<table width="100%">
+					<tr style="border-top: solid 3px black;border-left: solid 3px black;border-right: solid 3px black;">
+						<td style="padding-bottom:10px;padding-top:10px;font-size:30px;text-align:center;" width="100%">
+							<b>INVOICE</b>
+						</td>
+					</tr>
+				</table>
+				<table width="100%">
+					<tr style="border-top: solid 1px black;border-left: solid 3px black;border-right: solid 3px black;">
+						<td width="50%" style="border-right: solid 1px black;">
+							<table width="100%">
+								<tr style="border-bottom: solid 1px black;">
+									<td width="35%">
+										<b>INVOICE No.</b><br/>
+										<b>INVOICE DATE</b><br/>
+	                        			<b>Mode of Transport</b><br/>
+	                      				<b>Documents Through</b>
+	                      			</td>
+	                      			<td width="5%">
+										:<br/>
+										:<br/>
+										:<br/>
+										:
+									</td>
+									<td width="60%">
+										<span t-field="o.number"/><br/>
+										<span t-field="o.date_invoice"/><br/>
+										<br/>
+									</td>
+	                      		</tr>
+	                      	</table>
+						</td>
+						<td width="50%">
+							<table width="100%">
+								<tr style="border-bottom: solid 1px black;">
+									<td width="45%">
+										<b>ORDER No.</b><br/>
+										<b>ORDER DATE</b><br/>
+	                        			<b>REVERSE CHARGE</b><br/>
+	                      				<b>VEH. No</b>
+	                      			</td>
+	                      			<td width="5%">
+										:<br/>
+										:<br/>
+										:<br/>
+										:
+									</td>
+									<td width="50%">
+										<br/>
+										<br/>
+										(Yes/No)<br/>
+									</td>
+	                      		</tr>
+	                      	</table>
+						</td>
+					</tr>
+					<tr style="border-left: solid 3px black;border-right: solid 3px black;">
+	                	<td style="border-right: solid 1px black;"><b>Details of Receiver / Bill To :</b></td>
+	                	<td><b>Details of Consignee / Shipped To :</b></td>
+	               	</tr>
+				</table>
+				<table width="100%">
+					<tr style="border-left: solid 3px black;border-right: solid 3px black;border-bottom: solid 3px black;">
+						<td width="50%" style="border-right: solid 1px black;">
+							<table>
+								<tr>
+									<td width="28%"><b>Party</b></td>
+									<td width="2%">:</td>
+									<td width="70%"><span t-field="o.partner_id.name"/></td>
+								</tr>
+								<tr>
+									<td><b>Address</b></td>
+									<td>:</td>
+									<td>
+										<span t-if="o.partner_id.street"><span t-field="o.partner_id.street"/><br/></span>
+					        			<span t-if="o.partner_id.street2"><span t-field="o.partner_id.street2"/></span>
+					        			<span t-if="o.partner_id.city"><br/><span t-field="o.partner_id.city"/>,</span>
+					        			<span t-if="o.partner_id.zip"><span t-field="o.partner_id.zip"/></span>
+									</td>
+								</tr>
+								<tr>
+									<td><b>GSTIN</b></td>
+									<td>:</td>
+									<td><span t-field="o.partner_id.gst_no"/></td>
+								</tr>
+								<tr>
+									<td><b>STATE &amp; CODE</b></td>
+									<td>:</td>
+									<td><span t-if="o.partner_id.state_id"><span t-field="o.partner_id.state_id.name"/>,
+										<span t-field="o.partner_id.state_id.code"/></span>
+									</td>
+								</tr>
+							</table>
+						</td>
+						<td width="50%">
+							<table>
+								<tr>
+									<td width="28%"><b>Party</b></td>
+									<td width="2%">:</td>
+									<td width="70%"><span t-field="o.partner_id.name"/></td>
+								</tr>
+								<tr>
+									<td><b>Address</b></td>
+									<td>:</td>
+									<td>
+										<span t-if="o.partner_id.street"><span t-field="o.partner_id.street"/><br/></span>
+					        			<span t-if="o.partner_id.street2"><span t-field="o.partner_id.street2"/></span>
+					        			<span t-if="o.partner_id.city"><br/><span t-field="o.partner_id.city"/>,</span>
+					        			<span t-if="o.partner_id.zip"><span t-field="o.partner_id.zip"/></span>
+									</td>
+								</tr>
+								<tr>
+									<td><b>GSTIN</b></td>
+									<td>:</td>
+									<td><span t-field="o.partner_id.gst_no"/></td>
+								</tr>
+								<tr>
+									<td><b>STATE &amp; CODE</b></td>
+									<td>:</td>
+									<td><span t-if="o.partner_id.state_id"><span t-field="o.partner_id.state_id.name"/>,
+										<span t-field="o.partner_id.state_id.code"/></span>
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+				</table>
+				<table width="100%">
+					<tr style="border-bottom: solid 1px black;border-left: solid 3px black;border-right: solid 3px black;text-align:center;">
+						<td width="2%" style="border-right: solid 1px black;"><b>SI. No.</b></td>
+						<td width="7%" style="border-right: solid 1px black;"><b>ITEM CODE</b></td>
+						<td width="11%" style="border-right: solid 1px black;"><b>HSN</b></td>
+						<td width="20%" style="border-right: solid 1px black;"><b>PRODUCT PARTICULARS</b></td>
+						<td width="7%" style="border-right: solid 1px black;"><b>QTY</b></td>
+						<td width="9%" style="border-right: solid 1px black;"><b>UNIT RATE</b></td>
+						<td width="10%" style="border-right: solid 1px black;"><b>TOTAL</b></td>
+						<td width="5%" style="border-right: solid 1px black;"><b>DISC %</b></td>
+						<td width="6%" style="border-right: solid 1px black;"><b>DISC</b></td>
+						<td width="10%" style="border-right: solid 1px black;"><b>TAXABLE VALUE</b></td>
+						<td width="5%" style="border-right: solid 1px black;"><b>GST %</b></td>
+						<td width="8%"><b>GST</b></td>
+					</tr>
+					<tr t-foreach="lines" t-as="line" style="border-bottom: solid 1px black;border-left: solid 3px black;border-right: solid 3px black;">
+						<td style="border-right: solid 1px black;text-align:center;"><span t-esc="line['s_no']"/></td>
+						<td style="border-right: solid 1px black;text-align:center;"><span t-esc="line['code']"/></td>
+						<td style="border-right: solid 1px black;text-align:center;"><span t-esc="line['hsn']"/></td>
+						<td style="border-right: solid 1px black;text-align:left;"><span t-esc="line['name']"/></td>
+						<td style="border-right: solid 1px black;text-align:center;"><span t-esc="line['qty']"/></td>
+						<td style="border-right: solid 1px black;text-align:right;"><span t-esc="line['price_unit']"/></td>
+						<td style="border-right: solid 1px black;text-align:right;"><span t-esc="line['subtotal']"/></td>
+						<td style="border-right: solid 1px black;text-align:center;"><span t-esc="line['disc_perc']"/></td>
+						<td style="border-right: solid 1px black;text-align:right;"><span t-esc="line['discount']"/></td>
+						<td style="border-right: solid 1px black;text-align:right;"><span t-esc="line['taxable_value']"/></td>
+						<td style="border-right: solid 1px black;text-align:right;"><span t-esc="line['gst_perc']"/></td>
+						<td style="text-align:right;"><span t-esc="line['gst']"/></td>
+					</tr>
+					<tr t-foreach="blank_lines" t-as="line" style="border-bottom: solid 1px black;border-left: solid 3px black;border-right: solid 3px black;text-align:center;">
+						<td style="border-right: solid 1px black;"><span t-esc="line['no']"/></td>
+						<td style="border-right: solid 1px black;"></td>
+						<td style="border-right: solid 1px black;"></td>
+						<td style="border-right: solid 1px black;"></td>
+						<td style="border-right: solid 1px black;"></td>
+						<td style="border-right: solid 1px black;"></td>
+						<td style="border-right: solid 1px black;"></td>
+						<td style="border-right: solid 1px black;"></td>
+						<td style="border-right: solid 1px black;"></td>
+						<td style="border-right: solid 1px black;"></td>
+						<td style="border-right: solid 1px black;"></td>
+						<td></td>
+					</tr>
+					<tr style="border-bottom: solid 1px black;border-left: solid 3px black;border-right: solid 3px black;">
+						<td colspan="4" style="border-right: solid 1px black;text-align:center;"><b>TOTAL</b></td>
+						<td style="border-right: solid 1px black;text-align:center;"><b><span t-esc="total_values['total_qty']"/></b></td>
+						<td style="border-right: solid 1px black;"></td>
+						<td style="border-right: solid 1px black;text-align:right;"><b><span t-esc="total_values['total_nodiscount']"/></b></td>
+						<td style="border-right: solid 1px black;"></td>
+						<td style="border-right: solid 1px black;text-align:right;"><b><span t-esc="total_values['total_discount']"/></b></td>
+						<td style="border-right: solid 1px black;text-align:right;"><b><span t-field="o.amount_untaxed"/></b></td>
+						<td style="border-right: solid 1px black;"></td>
+						<td style="text-align:right;"><b><span t-field="o.amount_tax"/></b></td>
+					</tr>
+					<tr style="border-bottom: solid 1px black;border-left: solid 3px black;border-right: solid 3px black;text-align:right;">
+						<td colspan="3" style="border-right: solid 1px black;text-align:center;">TAX DETAILS</td>
+						<td style="border-right: solid 1px black;">TAXABLE VALUE</td>
+						<td style="border-right: solid 1px black;">SGST</td>
+						<td style="border-right: solid 1px black;">SGST AMT.</td>
+						<td style="border-right: solid 1px black;">CGST</td>
+						<td style="border-right: solid 1px black;">CGST AMT.</td>
+						<td style="border-right: solid 1px black;">IGST</td>
+						<td style="border-right: solid 1px black;">IGST AMT.</td>
+						<td colspan="2">TOTAL VALUE</td>
+					</tr>
+					<tr style="border-bottom: solid 1px black;border-left: solid 3px black;border-right: solid 3px black;text-align:right;">
+						<td colspan="3" style="border-right: solid 1px black;text-align:center;">5% GST SALES</td>
+						<td style="border-right: solid 1px black;"><span t-esc="taxable_values['5.0']"/></td>
+						<td style="border-right: solid 1px black;">2.5%</td>
+						<td style="border-right: solid 1px black;"><span t-esc="sgst_values['2.5']"/></td>
+						<td style="border-right: solid 1px black;">2.5%</td>
+						<td style="border-right: solid 1px black;"><span t-esc="cgst_values['2.5']"/></td>
+						<td style="border-right: solid 1px black;">5%</td>
+						<td style="border-right: solid 1px black;"><span t-esc="igst_values['5.0']"/></td>
+						<td colspan="2"><b><span t-esc="total_values['total_5']"
+							t-esc-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/></b></td>
+					</tr>
+					<tr style="border-bottom: solid 1px black;border-left: solid 3px black;border-right: solid 3px black;text-align:right;">
+						<td colspan="3" style="border-right: solid 1px black;text-align:center;">12% GST SALES</td>
+						<td style="border-right: solid 1px black;"><span t-esc="taxable_values['12.0']"/></td>
+						<td style="border-right: solid 1px black;">6%</td>
+						<td style="border-right: solid 1px black;"><span t-esc="sgst_values['6.0']"/></td>
+						<td style="border-right: solid 1px black;">6%</td>
+						<td style="border-right: solid 1px black;"><span t-esc="cgst_values['6.0']"/></td>
+						<td style="border-right: solid 1px black;">12%</td>
+						<td style="border-right: solid 1px black;"><span t-esc="igst_values['12.0']"/></td>
+						<td colspan="2"><b><span t-esc="total_values['total_12']"
+							t-esc-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/></b></td>
+					</tr>
+					<tr style="border-bottom: solid 1px black;border-left: solid 3px black;border-right: solid 3px black;text-align:right;">
+						<td colspan="3" style="border-right: solid 1px black;text-align:center;">18% GST SALES</td>
+						<td style="border-right: solid 1px black;"><span t-esc="taxable_values['18.0']"/></td>
+						<td style="border-right: solid 1px black;">9%</td>
+						<td style="border-right: solid 1px black;"><span t-esc="sgst_values['9.0']"/></td>
+						<td style="border-right: solid 1px black;">9%</td>
+						<td style="border-right: solid 1px black;"><span t-esc="cgst_values['9.0']"/></td>
+						<td style="border-right: solid 1px black;">18%</td>
+						<td style="border-right: solid 1px black;"><span t-esc="igst_values['18.0']"/></td>
+						<td colspan="2"><b><span t-esc="total_values['total_18']"
+							t-esc-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/></b></td>
+					</tr>
+					<tr style="border-bottom: solid 1px black;border-left: solid 3px black;border-right: solid 3px black;text-align:right;">
+						<td colspan="3" style="border-right: solid 1px black;text-align:center;">28% GST SALES</td>
+						<td style="border-right: solid 1px black;"><span t-esc="taxable_values['28.0']"/></td>
+						<td style="border-right: solid 1px black;">14%</td>
+						<td style="border-right: solid 1px black;"><span t-esc="sgst_values['14.0']"/></td>
+						<td style="border-right: solid 1px black;">14%</td>
+						<td style="border-right: solid 1px black;"><span t-esc="cgst_values['14.0']"/></td>
+						<td style="border-right: solid 1px black;">28%</td>
+						<td style="border-right: solid 1px black;"><span t-esc="igst_values['28.0']"/></td>
+						<td colspan="2"><b><span t-esc="total_values['total_28']"
+							t-esc-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/></b></td>
+					</tr>
+					<tr style="border-bottom: solid 1px black;border-left: solid 3px black;border-right: solid 3px black;text-align:right;">
+						<td colspan="3" style="border-right: solid 1px black;text-align:center;"><b>TOTAL</b></td>
+						<td style="border-right: solid 1px black;"><b><span t-field="o.amount_untaxed"
+							t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/></b></td>
+						<td style="border-right: solid 1px black;"></td>
+						<td style="border-right: solid 1px black;"><b><span t-esc="sgst_values['sgst_total']"
+							t-esc-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/></b></td>
+						<td style="border-right: solid 1px black;"></td>
+						<td style="border-right: solid 1px black;"><b><span t-esc="cgst_values['cgst_total']"
+							t-esc-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/></b></td>
+						<td style="border-right: solid 1px black;"></td>
+						<td style="border-right: solid 1px black;"><b><span t-esc="igst_values['igst_total']"
+							t-esc-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/></b></td>
+						<td colspan="2"><b><span t-field="o.amount_total"
+							t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/></b></td>
+					</tr>
+					<tr style="border-bottom: solid 1px black;border-left: solid 3px black;border-right: solid 3px black;">
+						<td colspan="3" style="border-right: solid 1px black;text-align:left;">Amount in Words:</td>
+						<td colspan="5" style="border-right: solid 1px black;text-align:left;"><b><span t-field="o.amount_in_words"/></b></td>
+						<td colspan="2" style="border-right: solid 1px black;text-align:right;"><b>GRAND TOTAL</b></td>
+						<td colspan="2" style="text-align:right;"><b><span t-field="o.amount_total"
+							t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/></b></td>
+					</tr>
+					<tr style="border-bottom: solid 1px black;border-left: solid 3px black;border-right: solid 3px black;text-align:left;
+						font-size:12px;">
+						<td colspan="4" style="border-right: solid 1px black;"><b>Terms &amp; Conditions</b><br/>
+							Goods once sold will not be taken back.<br/>
+							Payment of bills to be made within <span t-field="o.partner_id.property_payment_term.name"/> of receipt of goods.<br/>
+							Default payment attract interest @24% p.a. will be charged.<br/>
+							Any dispute is subject to Ernakulam Jurisdiction only.<br/>
+							<b>E. &amp;O.E</b>
+						</td>
+						<td colspan="4" style="border-right: solid 1px black;"><b>Payment Details</b><br/>
+							Please remit directly to our bank account.<br/>
+							Bank Name: <b>ICICI BANK LTD.</b><br/>
+							Branch: <b>EDAPPALLY, KOCHI-682024</b><br/>
+							Account No. <b>626405015816</b>
+						</td>
+						<td colspan="4" style="border-right: solid 1px black;"><br/>
+							<b>For Nice Chemicals (P) Ltd.</b><br/>
+							<br/>
+							<br/>
+							<b>Authorised Signatory</b>
+						</td>
+					</tr>
+				</table>
+	        </div>
+      	</t>
+	</template>
+
+	<template id="report_invoice_gst">
+	    <t t-call="report.html_container">
+	        <t t-foreach="docs" t-as="o">
+	            <t t-call="nice_gst.report_invoice_gst_document" t-lang="o.partner_id.lang"/>
+	        </t>
+	    </t>
+	</template>
+	
+	<report 
+            id="report_gst"
+            model="account.invoice"
+            string="GST Invoice"
+            report_type="qweb-pdf"
+            name="nice_gst.report_invoice_gst"
+            multi="True"
+        />
+</data>
+</openerp>
